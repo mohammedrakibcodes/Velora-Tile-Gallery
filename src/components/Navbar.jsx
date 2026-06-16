@@ -46,7 +46,7 @@ export default function Navbar() {
 
           <div>
             <p className="text-[10px] tracking-[1.5px] text-[#CAAA98] md:text-[11px]">
-              Premium Tile Gallery
+              Premium Tile
             </p>
           </div>
         </Link>
