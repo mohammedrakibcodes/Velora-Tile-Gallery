@@ -23,3 +23,14 @@ body {
   background-color: var(--background);
   color: var(--primary);
 }
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: #202940 !important;
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 22px !important;
+  font-weight: 700;
+}
