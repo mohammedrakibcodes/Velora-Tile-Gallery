@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 
 import { RxHamburgerMenu } from "react-icons/rx";
 import { CiLogin } from "react-icons/ci";
@@ -12,6 +13,7 @@ import { CgProfile } from "react-icons/cg";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   const navLinks = [
     {
@@ -52,19 +54,27 @@ export default function Navbar() {
         </Link>
 
         <ul className="hidden items-center gap-8 md:flex">
-          {navLinks.map((link) => (
-            <li key={link.path}>
-              <Link
-                href={link.path}
-                className="group relative flex items-center gap-2 font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:text-[#CAAA98]"
-              >
-                {link.icon}
-                <span>{link.name}</span>
+          {navLinks.map((link) => {
+            const isActive = pathname === link.path;
 
-                <span className="absolute -bottom-1 left-0 h-[2px] w-0 bg-[#CAAA98] transition-all duration-300 group-hover:w-full"></span>
-              </Link>
-            </li>
-          ))}
+            return (
+              <li key={link.path}>
+                <Link
+                  href={link.path}
+                  className={`group relative flex items-center gap-2 font-medium transition-all duration-300 hover:-translate-y-0.5 ${
+                    isActive
+                      ? "text-[#CAAA98]"
+                      : "text-white hover:text-[#CAAA98]"
+                  }`}
+                >
+                  {link.icon}
+                  <span>{link.name}</span>
+
+                  <span className="absolute -bottom-1 left-0 h-[2px] w-0 bg-[#CAAA98] transition-all duration-300 group-hover:w-full"></span>
+                </Link>
+              </li>
+            );
+          })}
         </ul>
 
         <div className="hidden md:block">
@@ -95,18 +105,26 @@ export default function Navbar() {
       >
         <div className="bg-[#202940] px-5 py-5">
           <ul className="flex flex-col gap-5">
-            {navLinks.map((link) => (
-              <li key={link.path}>
-                <Link
-                  href={link.path}
-                  onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center gap-3 font-medium text-white transition-all duration-300 hover:translate-x-2 hover:text-[#CAAA98]"
-                >
-                  {link.icon}
-                  <span>{link.name}</span>
-                </Link>
-              </li>
-            ))}
+            {navLinks.map((link) => {
+              const isActive = pathname === link.path;
+
+              return (
+                <li key={link.path}>
+                  <Link
+                    href={link.path}
+                    onClick={() => setIsMenuOpen(false)}
+                    className={`flex items-center gap-3 font-medium transition-all duration-300 hover:translate-x-2 ${
+                      isActive
+                        ? "text-[#CAAA98]"
+                        : "text-white hover:text-[#CAAA98]"
+                    }`}
+                  >
+                    {link.icon}
+                    <span>{link.name}</span>
+                  </Link>
+                </li>
+              );
+            })}
 
             <button className="mt-3 flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#CAAA98] px-5 py-3 font-medium text-[#202940] shadow-md transition-all duration-300 hover:bg-[#9A8678] hover:shadow-xl active:scale-95">
               <CiLogin size={20} />
