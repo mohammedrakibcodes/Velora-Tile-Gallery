@@ -78,12 +78,14 @@ export default function Navbar() {
         </ul>
 
         <div className="hidden md:block">
-          <button className="flex cursor-pointer items-center gap-2 rounded-lg bg-[#CAAA98] px-5 py-2 font-medium text-[#202940] shadow-md transition-all duration-300 hover:bg-[#9A8678] hover:shadow-xl active:scale-95">
+          <Link
+            href="/login"
+            className="flex items-center gap-2 rounded-lg bg-[#CAAA98] px-5 py-2 font-medium text-[#202940] shadow-md transition-all duration-300 hover:bg-[#9A8678] hover:shadow-xl active:scale-95"
+          >
             <CiLogin size={20} />
             <span>Login</span>
-          </button>
+          </Link>
         </div>
-
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           className="cursor-pointer text-white transition-all duration-300 hover:scale-110 md:hidden"
@@ -126,10 +128,14 @@ export default function Navbar() {
               );
             })}
 
-            <button className="mt-3 flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#CAAA98] px-5 py-3 font-medium text-[#202940] shadow-md transition-all duration-300 hover:bg-[#9A8678] hover:shadow-xl active:scale-95">
+            <Link
+              href="/login"
+              onClick={() => setIsMenuOpen(false)}
+              className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-[#CAAA98] px-5 py-3 font-medium text-[#202940] shadow-md transition-all duration-300 hover:bg-[#9A8678] hover:shadow-xl active:scale-95"
+            >
               <CiLogin size={20} />
               <span>Login</span>
-            </button>
+            </Link>
           </ul>
         </div>
       </div>

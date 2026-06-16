@@ -26,6 +26,7 @@ export default function TileCard({ tile }) {
           src={image}
           alt={title}
           fill
+          priority
           onLoad={() => setImageLoaded(true)}
           className={`object-cover transition duration-500 group-hover:scale-110 ${
             imageLoaded ? "opacity-100" : "opacity-0"
