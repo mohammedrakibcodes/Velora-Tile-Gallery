@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { FcGoogle } from "react-icons/fc";
 
 import {
   Button,
@@ -83,7 +84,21 @@ export default function LoginPage() {
           </Button>
         </Form>
 
-        <div className="my-6 flex items-center gap-3"></div>
+        <div className="my-6 flex items-center gap-3">
+          <div className="h-px flex-1 bg-[#CAAA98]/30"></div>
+
+          <span className="text-sm text-[#9A8678]">OR</span>
+
+          <div className="h-px flex-1 bg-[#CAAA98]/30"></div>
+        </div>
+
+        <button
+          type="button"
+          className="flex w-full items-center justify-center gap-3 rounded-lg border border-[#CAAA98]/30 py-3 font-medium text-[#202940] transition-all duration-300 hover:bg-[#F8F5F2]"
+        >
+          <FcGoogle size={22} />
+          Continue With Google
+        </button>
 
         <p className="mt-6 text-center text-[#9A8678]">
           Don&apos;t have an account?{" "}
