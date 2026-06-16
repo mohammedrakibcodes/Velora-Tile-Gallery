@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
@@ -5,15 +8,28 @@ import { FiArrowRight } from "react-icons/fi";
 export default function TileCard({ tile }) {
   const { id, image, title, category, price, dimensions, stock } = tile;
 
+  const [imageLoaded, setImageLoaded] = useState(false);
+
   return (
     <div className="group overflow-hidden rounded-2xl border border-[#CAAA98]/20 bg-white shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
       <div className="relative h-64 overflow-hidden">
+        {!imageLoaded && (
+          <div className="absolute inset-0 z-10 flex flex-col gap-4 bg-white p-4">
+            <div className="skeleton h-32 w-full"></div>
+            <div className="skeleton h-4 w-28"></div>
+            <div className="skeleton h-4 w-full"></div>
+            <div className="skeleton h-4 w-full"></div>
+          </div>
+        )}
+
         <Image
           src={image}
           alt={title}
           fill
-          className="object-cover transition duration-500 group-hover:scale-110"
-          priority
+          onLoad={() => setImageLoaded(true)}
+          className={`object-cover transition duration-500 group-hover:scale-110 ${
+            imageLoaded ? "opacity-100" : "opacity-0"
+          }`}
         />
       </div>
 
@@ -29,19 +45,16 @@ export default function TileCard({ tile }) {
         <div className="space-y-2 text-sm">
           <div className="flex items-center justify-between">
             <span className="text-[#9A8678]">Dimension</span>
-
             <span className="font-medium text-[#202940]">{dimensions}</span>
           </div>
 
           <div className="flex items-center justify-between">
             <span className="text-[#9A8678]">Price</span>
-
             <span className="font-bold text-[#202940]">{price}</span>
           </div>
 
           <div className="flex items-center justify-between">
             <span className="text-[#9A8678]">Stock</span>
-
             <span
               className={`font-medium ${
                 stock === "Available" ? "text-green-600" : "text-red-500"
