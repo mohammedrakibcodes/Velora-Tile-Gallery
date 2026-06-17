@@ -1,6 +1,10 @@
 "use client";
 
+import { authClient } from "@/lib/auth-client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 import { FcGoogle } from "react-icons/fc";
 
 import {
@@ -13,17 +17,32 @@ import {
 } from "@heroui/react";
 
 export default function LoginPage() {
-  const handleLogin = (event) => {
+  const router = useRouter();
+
+  const handleLogin = async (event) => {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
 
-    const loginData = {
-      email: formData.get("email"),
-      password: formData.get("password"),
-    };
+    const email = formData.get("email");
+    const password = formData.get("password");
 
-    console.log(loginData);
+    const { data, error } = await authClient.signIn.email({
+      email,
+      password,
+    });
+
+    if (error) {
+      console.log(error);
+      alert(error.message || "Login failed");
+      return;
+    }
+
+    console.log(data);
+    alert("Login successful");
+
+    router.push("/");
+    router.refresh();
   };
 
   return (

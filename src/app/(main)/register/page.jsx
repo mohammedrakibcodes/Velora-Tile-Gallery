@@ -10,22 +10,37 @@ import {
   Label,
   TextField,
 } from "@heroui/react";
+
 import { FcGoogle } from "react-icons/fc";
 
+import { authClient } from "@/lib/auth-client";
+
 export default function RegisterPage() {
-  const handleRegister = (event) => {
+  const handleRegister = async (event) => {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
 
-    const userData = {
-      name: formData.get("name"),
-      email: formData.get("email"),
-      photoURL: formData.get("photoURL"),
-      password: formData.get("password"),
-    };
+    const name = formData.get("name");
+    const email = formData.get("email");
+    const image = formData.get("photoURL");
+    const password = formData.get("password");
 
-    console.log(userData);
+    const { data, error } = await authClient.signUp.email({
+      name,
+      email,
+      image,
+      password,
+    });
+
+    if (error) {
+      console.log(error);
+      alert(error.message || "Registration failed");
+      return;
+    }
+
+    console.log(data);
+    alert("Registration successful");
   };
 
   return (
@@ -38,6 +53,7 @@ export default function RegisterPage() {
             Join Velora and discover premium tile collections.
           </p>
         </div>
+
         <Form onSubmit={handleRegister} className="mt-8 flex flex-col gap-5">
           <TextField isRequired name="name">
             <Label>Name</Label>
@@ -83,7 +99,9 @@ export default function RegisterPage() {
             }}
           >
             <Label>Password</Label>
+
             <Input placeholder="Create a password" />
+
             <FieldError />
           </TextField>
 
@@ -94,6 +112,7 @@ export default function RegisterPage() {
             Register
           </Button>
         </Form>
+
         <div className="my-6 flex items-center gap-3">
           <div className="h-px flex-1 bg-[#CAAA98]/30"></div>
 
@@ -101,6 +120,7 @@ export default function RegisterPage() {
 
           <div className="h-px flex-1 bg-[#CAAA98]/30"></div>
         </div>
+
         <button
           type="button"
           className="flex w-full items-center justify-center gap-3 rounded-lg border border-[#CAAA98]/30 py-3 font-medium text-[#202940] transition-all duration-300 hover:bg-[#F8F5F2]"
@@ -108,12 +128,13 @@ export default function RegisterPage() {
           <FcGoogle size={22} />
           Continue With Google
         </button>
+
         <p className="mt-6 text-center text-[#9A8678]">
           Already have an account?{" "}
           <Link href="/login" className="font-semibold text-[#202940]">
             Login
           </Link>
-        </p>{" "}
+        </p>
       </div>
     </main>
   );
