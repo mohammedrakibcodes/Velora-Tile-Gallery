@@ -15,6 +15,7 @@ import {
   Label,
   TextField,
 } from "@heroui/react";
+import AuthModal from "@/components/AuthModal";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -27,22 +28,29 @@ export default function LoginPage() {
     const email = formData.get("email");
     const password = formData.get("password");
 
-    const { data, error } = await authClient.signIn.email({
+    const { error } = await authClient.signIn.email({
       email,
       password,
     });
 
     if (error) {
-      console.log(error);
       alert(error.message || "Login failed");
       return;
     }
 
-    console.log(data);
-    alert("Login successful");
+    document.getElementById("login-success").checked = true;
 
-    router.push("/");
-    router.refresh();
+    setTimeout(() => {
+      router.push("/");
+      router.refresh();
+    }, 2000);
+  };
+
+  const handleGoogleLogin = async () => {
+    await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/",
+    });
   };
 
   return (
@@ -113,6 +121,7 @@ export default function LoginPage() {
 
         <button
           type="button"
+          onClick={handleGoogleLogin}
           className="flex w-full items-center justify-center gap-3 rounded-lg border border-[#CAAA98]/30 py-3 font-medium text-[#202940] transition-all duration-300 hover:bg-[#F8F5F2]"
         >
           <FcGoogle size={22} />
@@ -125,6 +134,12 @@ export default function LoginPage() {
             Register
           </Link>
         </p>
+
+        <AuthModal
+          modalId="login-success"
+          title="🎉 Welcome Back!"
+          message="You have logged in successfully."
+        />
       </div>
     </main>
   );

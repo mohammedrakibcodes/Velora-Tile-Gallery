@@ -24,7 +24,6 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     await authClient.signOut();
-
     router.push("/");
     router.refresh();
   };
@@ -94,12 +93,23 @@ export default function Navbar() {
 
         <div className="hidden md:block">
           {isPending ? null : user ? (
-            <button
-              onClick={handleLogout}
-              className="flex cursor-pointer items-center gap-2 rounded-lg bg-[#CAAA98] px-5 py-2 font-medium text-[#202940] shadow-md transition-all duration-300 hover:bg-[#9A8678] hover:shadow-xl active:scale-95"
-            >
-              Logout
-            </button>
+            <div className="flex items-center gap-3">
+              <img
+                src={user.image || "/user.png"}
+                alt={user.name}
+                onError={(e) => {
+                  e.currentTarget.src = "/user.png";
+                }}
+                className="h-10 w-10 rounded-full border-2 border-[#CAAA98] object-cover"
+              />
+
+              <button
+                onClick={handleLogout}
+                className="flex cursor-pointer items-center gap-2 rounded-lg bg-[#CAAA98] px-5 py-2 font-medium text-[#202940] shadow-md transition-all duration-300 hover:bg-[#9A8678] hover:shadow-xl active:scale-95"
+              >
+                Logout
+              </button>
+            </div>
           ) : (
             <Link
               href="/login"
@@ -126,12 +136,27 @@ export default function Navbar() {
       <div
         className={`overflow-hidden transition-all duration-500 ease-in-out md:hidden ${
           isMenuOpen
-            ? "max-h-[400px] border-t border-[#CAAA98]/20 opacity-100"
+            ? "max-h-[500px] border-t border-[#CAAA98]/20 opacity-100"
             : "max-h-0 opacity-0"
         }`}
       >
         <div className="bg-[#202940] px-5 py-5">
           <ul className="flex flex-col gap-5">
+            {user && (
+              <div className="flex flex-col items-center gap-2">
+                <img
+                  src={user.image || "/user.png"}
+                  alt={user.name}
+                  onError={(e) => {
+                    e.currentTarget.src = "/user.png";
+                  }}
+                  className="h-16 w-16 rounded-full border-2 border-[#CAAA98] object-cover"
+                />
+
+                <span className="font-medium text-white">{user.name}</span>
+              </div>
+            )}
+
             {navLinks.map((link) => {
               const isActive = pathname === link.path;
 

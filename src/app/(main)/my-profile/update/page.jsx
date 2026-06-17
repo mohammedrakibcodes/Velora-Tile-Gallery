@@ -2,6 +2,10 @@
 
 import { useState } from "react";
 
+import { authClient } from "@/lib/auth-client";
+
+import { useRouter } from "next/navigation";
+
 import {
   Button,
   FieldError,
@@ -14,17 +18,37 @@ import {
 export default function UpdateProfilePage() {
   const [loading, setLoading] = useState(false);
 
+  const router = useRouter();
+
   const handleUpdate = async (event) => {
     event.preventDefault();
 
+    setLoading(true);
+
     const formData = new FormData(event.currentTarget);
 
-    const updatedUser = {
-      name: formData.get("name"),
-      image: formData.get("image"),
-    };
+    const name = formData.get("name");
+    const image = formData.get("image");
 
-    console.log(updatedUser);
+    const { data, error } = await authClient.updateUser({
+      name,
+      image,
+    });
+
+    setLoading(false);
+
+    if (error) {
+      console.log(error);
+      alert(error.message || "Update failed");
+      return;
+    }
+
+    console.log(data);
+
+    alert("Profile updated successfully");
+
+    router.push("/my-profile");
+    router.refresh();
   };
 
   return (

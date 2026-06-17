@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import AuthModal from "@/components/AuthModal";
 
 import {
   Button,
@@ -18,6 +19,7 @@ import { authClient } from "@/lib/auth-client";
 
 export default function RegisterPage() {
   const router = useRouter();
+
   const handleRegister = async (event) => {
     event.preventDefault();
 
@@ -28,7 +30,7 @@ export default function RegisterPage() {
     const image = formData.get("photoURL");
     const password = formData.get("password");
 
-    const { data, error } = await authClient.signUp.email({
+    const { error } = await authClient.signUp.email({
       name,
       email,
       image,
@@ -40,8 +42,19 @@ export default function RegisterPage() {
       return;
     }
 
-    router.push("/");
-    router.refresh();
+    document.getElementById("register-success").checked = true;
+
+    setTimeout(() => {
+      router.push("/");
+      router.refresh();
+    }, 2000);
+  };
+
+  const handleGoogleRegister = async () => {
+    await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/",
+    });
   };
 
   return (
@@ -87,6 +100,10 @@ export default function RegisterPage() {
             <FieldError />
           </TextField>
 
+          <p className="-mt-3 text-xs text-[#9A8678]">
+            Use a direct image URL from ImgBB (https://i.ibb.co/...)
+          </p>
+
           <TextField
             isRequired
             name="password"
@@ -124,6 +141,7 @@ export default function RegisterPage() {
 
         <button
           type="button"
+          onClick={handleGoogleRegister}
           className="flex w-full items-center justify-center gap-3 rounded-lg border border-[#CAAA98]/30 py-3 font-medium text-[#202940] transition-all duration-300 hover:bg-[#F8F5F2]"
         >
           <FcGoogle size={22} />
@@ -136,6 +154,12 @@ export default function RegisterPage() {
             Login
           </Link>
         </p>
+
+        <AuthModal
+          modalId="register-success"
+          title="🎉 Congratulations!"
+          message="Your account has been created successfully."
+        />
       </div>
     </main>
   );
