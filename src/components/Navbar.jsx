@@ -3,7 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+
+import { authClient } from "@/lib/auth-client";
+import { useSession } from "@/hooks/useSession";
 
 import { RxHamburgerMenu } from "react-icons/rx";
 import { CiLogin } from "react-icons/ci";
@@ -13,7 +16,18 @@ import { CgProfile } from "react-icons/cg";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   const pathname = usePathname();
+  const router = useRouter();
+
+  const { user, isPending } = useSession();
+
+  const handleLogout = async () => {
+    await authClient.signOut();
+
+    router.push("/");
+    router.refresh();
+  };
 
   const navLinks = [
     {
@@ -68,6 +82,7 @@ export default function Navbar() {
                   }`}
                 >
                   {link.icon}
+
                   <span>{link.name}</span>
 
                   <span className="absolute -bottom-1 left-0 h-[2px] w-0 bg-[#CAAA98] transition-all duration-300 group-hover:w-full"></span>
@@ -78,14 +93,24 @@ export default function Navbar() {
         </ul>
 
         <div className="hidden md:block">
-          <Link
-            href="/login"
-            className="flex items-center gap-2 rounded-lg bg-[#CAAA98] px-5 py-2 font-medium text-[#202940] shadow-md transition-all duration-300 hover:bg-[#9A8678] hover:shadow-xl active:scale-95"
-          >
-            <CiLogin size={20} />
-            <span>Login</span>
-          </Link>
+          {isPending ? null : user ? (
+            <button
+              onClick={handleLogout}
+              className="flex cursor-pointer items-center gap-2 rounded-lg bg-[#CAAA98] px-5 py-2 font-medium text-[#202940] shadow-md transition-all duration-300 hover:bg-[#9A8678] hover:shadow-xl active:scale-95"
+            >
+              Logout
+            </button>
+          ) : (
+            <Link
+              href="/login"
+              className="flex items-center gap-2 rounded-lg bg-[#CAAA98] px-5 py-2 font-medium text-[#202940] shadow-md transition-all duration-300 hover:bg-[#9A8678] hover:shadow-xl active:scale-95"
+            >
+              <CiLogin size={20} />
+              <span>Login</span>
+            </Link>
+          )}
         </div>
+
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           className="cursor-pointer text-white transition-all duration-300 hover:scale-110 md:hidden"
@@ -122,20 +147,30 @@ export default function Navbar() {
                     }`}
                   >
                     {link.icon}
+
                     <span>{link.name}</span>
                   </Link>
                 </li>
               );
             })}
 
-            <Link
-              href="/login"
-              onClick={() => setIsMenuOpen(false)}
-              className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-[#CAAA98] px-5 py-3 font-medium text-[#202940] shadow-md transition-all duration-300 hover:bg-[#9A8678] hover:shadow-xl active:scale-95"
-            >
-              <CiLogin size={20} />
-              <span>Login</span>
-            </Link>
+            {user ? (
+              <button
+                onClick={handleLogout}
+                className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-[#CAAA98] px-5 py-3 font-medium text-[#202940] shadow-md transition-all duration-300 hover:bg-[#9A8678] hover:shadow-xl active:scale-95"
+              >
+                Logout
+              </button>
+            ) : (
+              <Link
+                href="/login"
+                onClick={() => setIsMenuOpen(false)}
+                className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-[#CAAA98] px-5 py-3 font-medium text-[#202940] shadow-md transition-all duration-300 hover:bg-[#9A8678] hover:shadow-xl active:scale-95"
+              >
+                <CiLogin size={20} />
+                <span>Login</span>
+              </Link>
+            )}
           </ul>
         </div>
       </div>

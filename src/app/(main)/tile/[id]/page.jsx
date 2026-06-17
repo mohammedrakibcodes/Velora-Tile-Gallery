@@ -1,15 +1,27 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+
 import Image from "next/image";
 import Link from "next/link";
 
+import { authClient } from "@/lib/auth-client";
+
 export default function TileDetailsPage() {
   const params = useParams();
+  const router = useRouter();
+
+  const { data, isPending } = authClient.useSession();
 
   const [tile, setTile] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!isPending && !data?.session) {
+      router.push("/login");
+    }
+  }, [data, isPending, router]);
 
   useEffect(() => {
     const loadTile = async () => {
@@ -30,10 +42,22 @@ export default function TileDetailsPage() {
     loadTile();
   }, [params.id]);
 
-  if (loading) {
+  if (loading || isPending) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-[#F8F5F2]">
         <span className="loading loading-spinner loading-lg text-[#202940]"></span>
+      </main>
+    );
+  }
+
+  if (!data?.session) {
+    return null;
+  }
+
+  if (!tile) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-[#F8F5F2]">
+        <h2 className="text-2xl font-bold text-[#202940]">Tile Not Found</h2>
       </main>
     );
   }

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import {
   Button,
@@ -16,6 +17,7 @@ import { FcGoogle } from "react-icons/fc";
 import { authClient } from "@/lib/auth-client";
 
 export default function RegisterPage() {
+  const router = useRouter();
   const handleRegister = async (event) => {
     event.preventDefault();
 
@@ -34,13 +36,12 @@ export default function RegisterPage() {
     });
 
     if (error) {
-      console.log(error);
       alert(error.message || "Registration failed");
       return;
     }
 
-    console.log(data);
-    alert("Registration successful");
+    router.push("/");
+    router.refresh();
   };
 
   return (
